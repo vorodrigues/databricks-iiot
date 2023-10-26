@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md-sandbox
-# MAGIC # IoT Platform with Databricks Lakehouse - Ingesting Industrial Sensor Data for Real-Time Analysis
+# MAGIC # End to End Industrial IoT (IIoT) on Databricks
 # MAGIC
 # MAGIC <img src="https://github.com/databricks-demos/dbdemos-resources/raw/main/images/manufacturing/lakehouse-iot-turbine/lakehouse-manuf-iot-full.png " style="float: left; margin-right: 30px" width="600px" />
 # MAGIC

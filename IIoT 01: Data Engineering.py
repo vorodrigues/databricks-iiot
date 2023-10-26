@@ -78,10 +78,8 @@ spark.sql(f'USE {DB}')
 
 # COMMAND ----------
 
-# MAGIC %md ## 1. Data Ingestion from IoT Hubs
+# MAGIC %md ## 1. Data Ingestion from IoT Hub
 # MAGIC Databricks provides a native connector to IoT and Event Hubs. Below, we will use PySpark Structured Streaming to read from an IoT Hub stream of data and write the data in it's raw format directly into Delta. 
-# MAGIC
-# MAGIC Make sure that your IIoT Event Generator is sending payloads to IoT Hub as shown below.
 # MAGIC
 # MAGIC <img src="https://sguptasa.blob.core.windows.net/random/iiot_blog/iot_simulator.gif" width=800>
 # MAGIC
@@ -90,10 +88,6 @@ spark.sql(f'USE {DB}')
 # MAGIC 2. **Weather Sensor readings** - this payload contains `date`,`timestamp`,`temperature`,`humidity`,`windspeed`, and `winddirection` fields
 # MAGIC
 # MAGIC We split out the two payloads into separate streams and write them both into Delta locations on cloud Storage. We are able to query these two Bronze tables *immediately* as the data streams in.
-
-# COMMAND ----------
-
-# MAGIC %run "./resources/IIoT Event Generator"
 
 # COMMAND ----------
 
@@ -274,6 +268,15 @@ turbine_enriched = (turbine_agg
 # COMMAND ----------
 
 # MAGIC %sql SELECT * FROM turbine_enriched WHERE deviceid IN ('WindTurbine-10','WindTurbine-20') AND window > current_timestamp() - INTERVAL 5 minutes
+
+# COMMAND ----------
+
+# MAGIC %md ## Generate Events
+
+# COMMAND ----------
+
+from resources.iiot_event_generator import iiot_event_generator
+iiot_event_generator(20000)
 
 # COMMAND ----------
 
