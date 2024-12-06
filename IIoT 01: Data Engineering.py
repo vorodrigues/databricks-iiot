@@ -156,6 +156,26 @@ iot_stream = (
 
 # COMMAND ----------
 
+# Function to merge incremental data from a streaming foreachbatch into a target Delta table
+def merge_delta(incremental, target): 
+  incremental.dropDuplicates(['date','window','deviceid']).createOrReplaceTempView("incremental")
+  
+  try:
+    # MERGE records into the target table using the specified join key
+    # incremental._jdf.sparkSession().sql(f"""
+    incremental.sparkSession.sql(f"""
+      MERGE INTO {target} t
+      USING incremental i
+      ON i.date=t.date AND i.window = t.window AND i.deviceId = t.deviceid
+      WHEN MATCHED THEN UPDATE SET *
+      WHEN NOT MATCHED THEN INSERT *
+    """)
+  except:
+    # If the †arget table does not exist, create one
+    incremental.writeTo(target).partitionedBy('date').createOrReplace()
+
+# COMMAND ----------
+
 # Create functions to merge turbine and weather data into their target Delta tables
 def merge_delta(incremental, target): 
   incremental.dropDuplicates(['date','window','deviceid']).createOrReplaceTempView("incremental")
